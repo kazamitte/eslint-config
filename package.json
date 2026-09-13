@@ -14,7 +14,8 @@
     "./next": "./src/eslint.next.js"
   },
   "files": [
-    "src"
+    "src",
+    ".gitignore"
   ],
   "peerDependencies": {
     "eslint": "^9.39.2"
