@@ -4,8 +4,8 @@ import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import { createBaseConfig } from './eslint.base.js';
 
-export const nodeConfig = (tsconfigRootDir) => {
-  const baseConfig = createBaseConfig(tsconfigRootDir);
+export const nodeConfig = (tsconfigRootDir, options) => {
+  const baseConfig = createBaseConfig(tsconfigRootDir, options);
 
   const nodeConfig = [
     {

@@ -1,24 +1,42 @@
-import { fileURLToPath } from 'node:url';
-import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
 import vitestPlugin from '@vitest/eslint-plugin';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-const gitignorePath = fileURLToPath(new URL('../.gitignore', import.meta.url));
+const DEFAULT_IGNORES = [
+  '**/eslint.config.*',
 
-export function createBaseConfig(tsconfigRootDir) {
+  '**/.vscode/',
+  '**/.idea/',
+  '**/.claude/',
+  '**/.agents/',
+  '**/.npm/',
+  '**/.pnpm-store/',
+
+  '**/dist/',
+  '**/build/',
+  '**/out/',
+  '**/.output/',
+  '**/.cache/',
+  '**/.turbo/',
+
+  '**/coverage/',
+  '**/test-results/',
+  '**/playwright-report/',
+  '**/blob-report/',
+  '**/storybook-static/',
+
+  '**/.wrangler/',
+  '**/.vercel/',
+
+  '**/worker-configuration.d.ts',
+];
+
+export function createBaseConfig(tsconfigRootDir, options = {}) {
   return [
     {
-      ignores: [
-        '**/*.config.*',
-        'eslint.config.js',
-        '.storybook/**',
-        'scripts/**',
-        'worker-configuration.d.ts',
-      ],
+      ignores: [...DEFAULT_IGNORES, ...(options.ignores ?? [])],
     },
-    includeIgnoreFile(gitignorePath, { gitignoreResolution: true }),
     {
       files: ['**/*.{js,mjs,cjs}'],
       extends: [js.configs.recommended],

@@ -1,6 +1,6 @@
 # `@kazamitte/eslint-config`
 
-Shared ESLint v9.x flat-config presets for the design-system monorepo, reused across other React/Next/Node projects.
+Shared ESLint v10.x flat-config presets for the design-system monorepo, reused across other React/Next/Node projects.
 
 ```js
 // eslint.config.js (project root)
@@ -25,8 +25,14 @@ Entry points: `./base`, `./node`, `./react`, `./next` — each a factory `xxxCon
 
 - base — framework-agnostic core: type safety, style unification, banned syntax, plus a **Vitest** block for test files that relaxes the `no-unsafe-*` family (unavoidable around mocks/expect) and `no-console`.
 - node — base + node globals + zod.
-- react — base + react-hooks + jsx-a11y + zod + react-refresh, plus **Storybook** and **Playwright** blocks.
-- next — base + react-hooks + jsx-a11y + zod + @next/next, plus App Router `func-style` relaxation and the same **Storybook**/**Playwright** blocks. No react-refresh (React-dev-server specific).
+- react — base + react-hooks + zod + react-refresh, plus **Storybook** and **Playwright** blocks.
+- next — base + react-hooks + zod + @next/next, plus App Router `func-style` relaxation and the same **Storybook**/**Playwright** blocks. No react-refresh (React-dev-server specific).
+
+Ignores are a fixed list in `createBaseConfig` (`DEFAULT_IGNORES`), extendable per project:
+
+```js
+export default reactConfig(import.meta.dirname, { ignores: ['vendor/**'] });
+```
 
 ---
 
@@ -37,5 +43,6 @@ Entry points: `./base`, `./node`, `./react`, `./next` — each a factory `xxxCon
 
 ## Version notes
 
-- ESLint v9 (EOL: 2026-08-06). v10 migration is a separate task.
+- ESLint v10. Config files are resolved from each linted file's directory, so a monorepo can hold one `eslint.config.js` per package without `--config`.
+- `eslint-plugin-react-hooks` v7 moved the React Compiler rule set into `recommended`: 16 rules instead of v6's two, 12 of them `error`. See the table below.
 - astro (planned) — base + eslint-plugin-astro.

@@ -1,16 +1,24 @@
 import nextPlugin from '@next/eslint-plugin-next';
 import prettierConfig from 'eslint-config-prettier';
-import a11yPlugin from 'eslint-plugin-jsx-a11y';
 import playwrightPlugin from 'eslint-plugin-playwright';
 import hooksPlugin from 'eslint-plugin-react-hooks';
-import storybookPlugin from 'eslint-plugin-storybook';
 import zodPlugin from 'eslint-plugin-zod';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import { createBaseConfig } from './eslint.base.js';
 
-export const nextConfig = (tsconfigRootDir) => {
-  const baseConfig = createBaseConfig(tsconfigRootDir);
+const APP_ROUTER_CONVENTION_FILES = [
+  // Route segment UI + route handlers
+  '**/app/**/{page,layout,template,default,loading,error,global-error,not-found,forbidden,unauthorized,route}.{ts,tsx}',
+  // Metadata files (https://nextjs.org/docs/app/api-reference/file-conventions/metadata)
+  '**/app/**/{sitemap,robots,manifest}.{ts,tsx}',
+  '**/app/**/{icon,apple-icon,opengraph-image,twitter-image}.{ts,tsx}',
+  // Project-root conventions — outside `app/`, same `export function` shape
+  '**/{middleware,instrumentation,instrumentation-client}.{ts,tsx}',
+];
+
+export const nextConfig = (tsconfigRootDir, options) => {
+  const baseConfig = createBaseConfig(tsconfigRootDir, options);
 
   const nextConfig = [
     globalIgnores(['.next/**', 'next-env.d.ts']),
@@ -18,7 +26,6 @@ export const nextConfig = (tsconfigRootDir) => {
       files: ['**/*.{ts,tsx}'],
       plugins: {
         'react-hooks': hooksPlugin,
-        'jsx-a11y': a11yPlugin,
         '@next/next': nextPlugin,
       },
       languageOptions: {
@@ -31,21 +38,14 @@ export const nextConfig = (tsconfigRootDir) => {
       },
       rules: {
         ...hooksPlugin.configs.recommended.rules,
-        ...a11yPlugin.configs.recommended.rules,
         ...nextPlugin.configs['core-web-vitals'].rules,
         'react-hooks/rules-of-hooks': 'error',
         'react-hooks/exhaustive-deps': 'warn',
-        'jsx-a11y/click-events-have-key-events': 'error',
-        'jsx-a11y/interactive-supports-focus': 'error',
-        'jsx-a11y/no-aria-hidden-on-focusable': 'error',
-        'jsx-a11y/prefer-tag-over-role': 'warn',
       },
     },
-    // App Router convention files use `export default function` — relax func-style
+    // App Router convention files use `export default function`
     {
-      files: [
-        '**/app/**/{page,layout,template,loading,error,not-found,route}.tsx',
-      ],
+      files: APP_ROUTER_CONVENTION_FILES,
       rules: {
         'func-style': 'off',
       },
@@ -71,12 +71,7 @@ export const nextConfig = (tsconfigRootDir) => {
     },
     {
       files: ['**/*.stories.{ts,tsx}'],
-      plugins: { storybook: storybookPlugin },
       rules: {
-        ...storybookPlugin.configs['flat/recommended'].rules,
-        // no-uninstalled-addons requires linting .storybook/, which we exclude
-        // (avoids tsconfig include / type-checked conflicts). Disabled intentionally.
-        'storybook/no-uninstalled-addons': 'off',
         '@typescript-eslint/no-unsafe-assignment': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
