@@ -15,7 +15,6 @@ export const reactConfig = (tsconfigRootDir, options) => {
       files: ['**/*.{ts,tsx}'],
       plugins: {
         'react-hooks': hooksPlugin,
-        'react-refresh': reactRefresh,
       },
       languageOptions: {
         globals: {
@@ -29,12 +28,9 @@ export const reactConfig = (tsconfigRootDir, options) => {
         ...hooksPlugin.configs.recommended.rules,
         'react-hooks/rules-of-hooks': 'error',
         'react-hooks/exhaustive-deps': 'warn',
-        'react-refresh/only-export-components': [
-          'warn',
-          { allowConstantExport: true },
-        ],
       },
     },
+    reactRefresh.configs.vite(),
     // JSX files: `{value && <El/>}` on optional strings is idiomatic React,
     // not worth the Boolean() ceremony strict-boolean-expressions otherwise demands.
     {
