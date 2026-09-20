@@ -1,7 +1,6 @@
 import prettierConfig from 'eslint-config-prettier';
 import playwrightPlugin from 'eslint-plugin-playwright';
 import hooksPlugin from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
 import zodPlugin from 'eslint-plugin-zod';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
@@ -30,7 +29,6 @@ export const reactConfig = (tsconfigRootDir, options) => {
         'react-hooks/exhaustive-deps': 'warn',
       },
     },
-    reactRefresh.configs.vite(),
     // JSX files: `{value && <El/>}` on optional strings is idiomatic React,
     // not worth the Boolean() ceremony strict-boolean-expressions otherwise demands.
     {

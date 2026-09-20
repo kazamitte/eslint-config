@@ -2,7 +2,6 @@ import nextPlugin from '@next/eslint-plugin-next';
 import prettierConfig from 'eslint-config-prettier';
 import playwrightPlugin from 'eslint-plugin-playwright';
 import hooksPlugin from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
 import zodPlugin from 'eslint-plugin-zod';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
@@ -44,7 +43,6 @@ export const nextConfig = (tsconfigRootDir, options) => {
         'react-hooks/exhaustive-deps': 'warn',
       },
     },
-    reactRefresh.configs.next(),
     // App Router convention files use `export default function`
     {
       files: APP_ROUTER_CONVENTION_FILES,
